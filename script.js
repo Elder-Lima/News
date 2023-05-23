@@ -7,10 +7,13 @@
 const carrosell = document.querySelector(".carro");
 const container = document.getElementById("filme");
 const container2 = document.getElementById("mundo");
+const container3 = document.getElementById("esportes");
+let cards3;
 let cards2;
 let cards;
 let carrosel;
 
+let n = 1;
 let x = 1;
 let y = 1;
 
@@ -132,6 +135,40 @@ fetch('https://api.nytimes.com/svc/topstories/v2/movies.json?api-key=6hGZKI7p6kL
     infos(data.results);
 });
 
+// (API DE Notícias) ROTA Notícias Esportes:
+
+function infosS(noticiasE) {
+    noticiasE.map(esporte => {
+        
+        if(n <= 6){
+            cards3 = `
+                <div class="col" style="display: flex; justify-content: center; border-color: black;">
+                    <div class="card" style="width: 18rem; margin-bottom: 30px;   border-radius: 0;">
+                        <img  src="${esporte.multimedia[0].url}" class="card-img-top">
+                        <div class="card-body" >
+                            <h5 class="card-title">${esporte.title}</h5>
+                            <p class="card-text">${esporte.abstract}</p>
+                            <a href="${esporte.url}" target="_blank" style="text-decoration: none;"><buttom style="padding: 5px 10px; background-color: black; border-radius: 5px; color: white;">Ver Mais</buttom></a>
+                        </div>
+                    </div>
+                </div>
+                `;
+            container3.innerHTML += cards3;
+        }
+        n = n + 1;
+
+    })  
+}
+
+fetch('https://api.nytimes.com/svc/topstories/v2/sports.json?api-key=6hGZKI7p6kL6QwP0AQRUbHTOs0fvy28Q')
+
+.then(response => {
+    return response.json()
+})
+.then(data => {
+    infosS(data.results);
+});
+
 
 // (API CLIMA e API de Bandeiras) Rota Clima e link das bandeiras
 
@@ -151,7 +188,7 @@ const humidityElement = document.querySelector("#umidity span");
 const windElement = document.querySelector("#wind span");
 const weatherContainer = document.querySelector("#weather-data")
 
-// Função
+
 const getWeatherData = async(city) => {
     const apiWeatherURL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}&lang=pt_br`
 
@@ -161,7 +198,7 @@ const getWeatherData = async(city) => {
     return data
 }
 
-// Funçoes 
+
 const showWeatherData = async (city) => {
     const data = await getWeatherData(city);
 
@@ -176,7 +213,7 @@ const showWeatherData = async (city) => {
     weatherContainer.classList.remove("hide");
 }
 
-// Eventos
+
 searchBtn.addEventListener("click", (e) => {
     e.preventDefault();
 
@@ -225,11 +262,9 @@ fetch(apiUrl)
     let eurov = data.EURBRL.bid;
     let euro_d = data.EURBRL.create_date;
 
-    
-    // real.innerHTML = nome;
+
     realp.innerHTML = parseFloat(valor).toFixed(2) + " Real Brasileiro";
 
-    // realc.innerHTML = Date("DD/MMM/YYYY", (dia));
     const dataCriada = new Date(dia);
     const dataFormatada = dataCriada.toLocaleDateString('pt-BR', {
         timeZone: 'UTC',
